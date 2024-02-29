@@ -5,113 +5,90 @@
  * @format
  */
 
-import React from 'react';
-import type {PropsWithChildren} from 'react';
+import React, {useState} from 'react';
 import {
+  Button,
   SafeAreaView,
-  ScrollView,
-  StatusBar,
   StyleSheet,
   Text,
-  useColorScheme,
+  TextInput,
   View,
 } from 'react-native';
 
-import {
-  Colors,
-  DebugInstructions,
-  Header,
-  LearnMoreLinks,
-  ReloadInstructions,
-} from 'react-native/Libraries/NewAppScreen';
-
-type SectionProps = PropsWithChildren<{
-  title: string;
-}>;
-
-function Section({children, title}: SectionProps): React.JSX.Element {
-  const isDarkMode = useColorScheme() === 'dark';
-  return (
-    <View style={styles.sectionContainer}>
-      <Text
-        style={[
-          styles.sectionTitle,
-          {
-            color: isDarkMode ? Colors.white : Colors.black,
-          },
-        ]}>
-        {title}
-      </Text>
-      <Text
-        style={[
-          styles.sectionDescription,
-          {
-            color: isDarkMode ? Colors.light : Colors.dark,
-          },
-        ]}>
-        {children}
-      </Text>
-    </View>
-  );
-}
-
 function App(): React.JSX.Element {
-  const isDarkMode = useColorScheme() === 'dark';
+  const [number1, setNumber1] = useState<number>(0);
+  const [number2, setNumber2] = useState<number>(0);
+  const [resultado, setResultado] = useState<number | null>(0);
 
-  const backgroundStyle = {
-    backgroundColor: isDarkMode ? Colors.darker : Colors.lighter,
+  const calcular = () => {
+    var primero = 1;
+    var segundo = 0;
+    var elegido = number1 > number2 ? number1 : number2;
+    var noElegido = number1 < number2 ? number1 : number2;
+    for (var i = 1; primero !== segundo; i++) {
+      if ((elegido * i) % noElegido === 0) {
+        setResultado(elegido * i);
+        return;
+      }
+    }
   };
 
   return (
-    <SafeAreaView style={backgroundStyle}>
-      <StatusBar
-        barStyle={isDarkMode ? 'light-content' : 'dark-content'}
-        backgroundColor={backgroundStyle.backgroundColor}
-      />
-      <ScrollView
-        contentInsetAdjustmentBehavior="automatic"
-        style={backgroundStyle}>
-        <Header />
-        <View
-          style={{
-            backgroundColor: isDarkMode ? Colors.black : Colors.white,
-          }}>
-          <Section title="Step One">
-            Edit <Text style={styles.highlight}>App.tsx</Text> to change this
-            screen and then come back to see your edits.
-          </Section>
-          <Section title="See Your Changes">
-            <ReloadInstructions />
-          </Section>
-          <Section title="Debug">
-            <DebugInstructions />
-          </Section>
-          <Section title="Learn More">
-            Read the docs to discover what to do next:
-          </Section>
-          <LearnMoreLinks />
-        </View>
-      </ScrollView>
+    <SafeAreaView style={[styles.mainContainer]}>
+      <View>
+        <Text>First Number</Text>
+        <TextInput
+          style={{borderColor: 'black', borderWidth: 1}}
+          keyboardType="numeric"
+          onChangeText={number => {
+            // Check if the input is empty
+            if (number === '') {
+              setNumber1(0); // Set the state to 0 if the input is empty
+            } else {
+              setNumber1(parseInt(number, 10)); // Parse the input string to an integer
+            }
+          }}
+          value={number1.toString()}
+          onFocus={() => {
+            console.log('hola');
+          }}
+        />
+      </View>
+      <View style={{marginVertical: 10}}>
+        <Text>Second number</Text>
+        <TextInput
+          style={{borderColor: 'black', borderWidth: 1}}
+          keyboardType="numeric"
+          onChangeText={number => {
+            // Check if the input is empty
+            if (number === '') {
+              setNumber2(0); // Set the state to 0 if the input is empty
+            } else {
+              setNumber2(parseInt(number, 10)); // Parse the input string to an integer
+            }
+          }}
+          value={number2.toString()}
+        />
+      </View>
+      <Button title="Calcular M.C.M" onPress={() => calcular()} />
+      <View
+        style={{
+          marginVertical: 30,
+          justifyContent: 'center',
+          alignItems: 'center',
+        }}>
+        <Text style={{fontSize: 30}}>
+          Result -{'>'} {resultado}
+        </Text>
+      </View>
     </SafeAreaView>
   );
 }
 
 const styles = StyleSheet.create({
-  sectionContainer: {
-    marginTop: 32,
-    paddingHorizontal: 24,
-  },
-  sectionTitle: {
-    fontSize: 24,
-    fontWeight: '600',
-  },
-  sectionDescription: {
-    marginTop: 8,
-    fontSize: 18,
-    fontWeight: '400',
-  },
-  highlight: {
-    fontWeight: '700',
+  mainContainer: {
+    paddingTop: 30,
+    paddingHorizontal: 20,
   },
 });
 
